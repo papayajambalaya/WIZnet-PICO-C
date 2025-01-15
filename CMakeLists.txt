@@ -2,12 +2,14 @@
 cmake_minimum_required(VERSION 3.12)
  
 # Set board
-#set(BOARD_NAME WIZnet_Ethernet_HAT)
-#set(BOARD_NAME W5100S_EVB_PICO)
-set(BOARD_NAME W5500_EVB_PICO)
-#set(BOARD_NAME W55RP20_EVB_PICO)
-#set(BOARD_NAME W5100S_EVB_PICO2)
-#set(BOARD_NAME W5500_EVB_PICO2)
+if(NOT DEFINED BOARD_NAME)
+    # set(BOARD_NAME WIZnet_Ethernet_HAT)
+    # set(BOARD_NAME W5100S_EVB_PICO)
+    set(BOARD_NAME W5500_EVB_PICO)
+    # set(BOARD_NAME W55RP20_EVB_PICO)
+    # set(BOARD_NAME W5100S_EVB_PICO2)
+    # set(BOARD_NAME W5500_EVB_PICO2)
+endif()
 
 if(${BOARD_NAME} STREQUAL WIZnet_Ethernet_HAT)
     #set(PICO_PLATFORM rp2350) #If you are using WIZnet_ethernet_HAT with Pico2, uncomment it.
@@ -71,17 +73,17 @@ pico_sdk_init()
 # the tests folder is included directly by a parent project, without including
 # the top level CMakeLists.txt.
 if(NOT DEFINED WIZNET_DIR)
-    set(WIZNET_DIR ${CMAKE_SOURCE_DIR}/libraries/ioLibrary_Driver)
+    set(WIZNET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/ioLibrary_Driver)
     message(STATUS "WIZNET_DIR = ${WIZNET_DIR}")
 endif()
 
 if(NOT DEFINED MBEDTLS_DIR)
-    set(MBEDTLS_DIR ${CMAKE_SOURCE_DIR}/libraries/mbedtls)
+    set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/mbedtls)
     message(STATUS "MBEDTLS_DIR = ${MBEDTLS_DIR}")
 endif()
 
 if(NOT DEFINED PORT_DIR)
-    set(PORT_DIR ${CMAKE_SOURCE_DIR}/port)
+    set(PORT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/port)
     message(STATUS "PORT_DIR = ${PORT_DIR}")
 endif()
 
@@ -92,10 +94,12 @@ add_definitions(-DMBEDTLS_CONFIG_FILE="${PORT_DIR}/mbedtls/inc/ssl_config.h")
 add_definitions(-DSET_TRUSTED_CERT_IN_SAMPLES)
 
 # Hardware-specific examples in subdirectories:
-add_subdirectory(examples)
+if(NOT DEFINED SKIP_WIZNET_EXAMPLES)
+    add_subdirectory(examples)
+endif()
 
 # Add libraries in subdirectories
-add_subdirectory(${CMAKE_SOURCE_DIR}/libraries)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/libraries)
 add_subdirectory(${MBEDTLS_DIR})
 add_subdirectory(${PORT_DIR})
 
