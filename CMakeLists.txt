@@ -5,10 +5,11 @@ cmake_minimum_required(VERSION 3.12)
 if(NOT DEFINED BOARD_NAME)
     # set(BOARD_NAME WIZnet_Ethernet_HAT)
     # set(BOARD_NAME W5100S_EVB_PICO)
-    set(BOARD_NAME W5500_EVB_PICO)
+    # set(BOARD_NAME W5500_EVB_PICO)
     # set(BOARD_NAME W55RP20_EVB_PICO)
     # set(BOARD_NAME W5100S_EVB_PICO2)
     # set(BOARD_NAME W5500_EVB_PICO2)
+    message(FATAL_ERROR "BOARD_NAME must be specified.")
 endif()
 
 if(${BOARD_NAME} STREQUAL WIZnet_Ethernet_HAT)
@@ -52,6 +53,19 @@ message(STATUS "WIZNET_CHIP = ${WIZNET_CHIP}")
 if(NOT DEFINED PICO_SDK_PATH)
     set(PICO_SDK_PATH ${CMAKE_SOURCE_DIR}/libraries/pico-sdk)
     message(STATUS "PICO_SDK_PATH = ${PICO_SDK_PATH}")
+endif()
+
+# If custom pinout, verify that all necessary macros are defined
+if(DEFINED WIZNET_CUSTOM_PINOUT)
+    if( NOT DEFINED PIN_SCK  OR
+        NOT DEFINED PIN_MOSI OR
+        NOT DEFINED PIN_MISO OR
+        NOT DEFINED PIN_CS   OR
+        NOT DEFINED PIN_RST  OR
+        NOT DEFINED PIN_IRQ 
+    )
+        message(FATAL_ERROR "IF WIZNET_CUSTOM_PINOUT is defined, user must specify all GPIO pins for the WIZNET interface.")
+    endif()
 endif()
 
 include(pico_sdk_import.cmake)

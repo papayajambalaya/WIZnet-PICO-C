@@ -15,31 +15,33 @@
  * ----------------------------------------------------------------------------------------------------
  */
 /* SPI */
+
 #if (DEVICE_BOARD_NAME == W55RP20_EVB_PICO)
-
-#define USE_SPI_PIO
-
-#define PIN_SCK 21
-#define PIN_MOSI 23
-#define PIN_MISO 22
-#define PIN_CS 20
-#define PIN_RST 25
-#define PIN_IRQ 24
-
+    #define USE_SPI_PIO
+    #ifndef WIZNET_CUSTOM_PINOUT
+        #define PIN_SCK 21
+        #define PIN_MOSI 23
+        #define PIN_MISO 22
+        #define PIN_CS 20
+        #define PIN_RST 25
+        #define PIN_IRQ 24
+    #endif
 #else
-/* SPI */
-#define SPI_PORT spi0
+    /* SPI */
+    #define SPI_PORT spi0
+    #ifndef WIZNET_CUSTOM_PINOUT
+        #define PIN_SCK 18
+        #define PIN_MOSI 19
+        #define PIN_MISO 16
+        #define PIN_CS 17
+        #define PIN_RST 20
+        #define PIN_IRQ 21
+    #endif
 
-#define PIN_SCK 18
-#define PIN_MOSI 19
-#define PIN_MISO 16
-#define PIN_CS 17
-#define PIN_RST 20
-#define PIN_IRQ 21
-
-/* Use SPI DMA */
-//#define USE_SPI_DMA // if you want to use SPI DMA, uncomment.
+    /* Use SPI DMA */
+    //#define USE_SPI_DMA // if you want to use SPI DMA, uncomment.
 #endif
+
 /**
  * ----------------------------------------------------------------------------------------------------
  * Functions
